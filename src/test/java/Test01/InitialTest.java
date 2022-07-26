@@ -19,18 +19,21 @@ public class InitialTest {
 
         driver = new ChromeDriver();
 
-        driver.get("https://formy-project.herokuapp.com/");
+        driver.get("http://the-internet.herokuapp.com/");
     }
 
     @Test
-    public void anInitialTest() {
+    public void firstWin() {
 
-        Assertions.assertEquals("Formy", driver.getTitle());
+        Assertions.assertEquals("The Internet", driver.getTitle());
     }
+
 
     @AfterAll
     public static void closeDriver() {
 
         driver.quit();
     }
+
+
 }
