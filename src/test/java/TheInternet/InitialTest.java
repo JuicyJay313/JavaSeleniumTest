@@ -1,4 +1,4 @@
-package Test01;
+package TheInternet;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterAll;

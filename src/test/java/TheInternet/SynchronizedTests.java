@@ -1,4 +1,4 @@
-package Test01;
+package TheInternet;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterAll;
@@ -14,23 +14,28 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class DynamicControls {
+public class SynchronizedTests {
     private static WebDriver driver;
 
     @BeforeAll
     public static void createDriver() {
 
         WebDriverManager.chromedriver().setup();
-
         driver = new ChromeDriver();
-
-        driver.get("http://the-internet.herokuapp.com/dynamic_controls");
     }
 
-
+    // Verify that a clicked button is clickable (enabled) again before asserting the returned value.
     @Test
     public void waitForEnabled() {
-        Assertions.assertEquals("It's enabled!", getLoadedData(driver));
+        driver.get("http://the-internet.herokuapp.com/dynamic_controls");
+        Assertions.assertEquals("It's enabled!", getContentAfterClick(driver));
+    }
+
+    // Asserting the text of a DOM objects that appears only after a lengthy loading.
+    @Test
+    public void waitForText(){
+        driver.get("http://the-internet.herokuapp.com/dynamic_loading/2");
+        Assertions.assertEquals("Hello World!", getFinishState(driver));
     }
 
     @AfterAll
@@ -39,11 +44,11 @@ public class DynamicControls {
         driver.quit();
     }
 
-    public static String getLoadedData(WebDriver driver) {
+    public static String getContentAfterClick(WebDriver driver) {
         WebElement enableButton = driver.findElement(By.xpath("//*[@id=\"input-example\"]/button"));
         enableButton.click();
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(1000));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(5000));
 
         enableButton = wait.until(ExpectedConditions.elementToBeClickable(enableButton));
         if(enableButton.isEnabled()){
@@ -52,6 +57,15 @@ public class DynamicControls {
         }
 
         return null;
+    }
 
+    public static String getFinishState(WebDriver driver) {
+        WebElement startButton = driver.findElement(By.xpath("//*[@id=\"start\"]/button"));
+        startButton.click();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(5000));
+        WebElement finishText = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("finish")));
+
+        return finishText.getText();
     }
 }
